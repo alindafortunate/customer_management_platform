@@ -11,7 +11,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import dj_database_url
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-4=jtq7pigjj0sbj7%!ikl_)ozq!=c60vj2$mg!v*d8j!&$q85-"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -75,10 +79,21 @@ WSGI_APPLICATION = "customer_management_platform.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
+"""DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
+    }
+} """
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("DATABASE_NAME"),
+        "USER": os.environ.get("DATABASE_USER"),
+        "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
+        "HOST": os.environ.get("DATABASE_HOST"),
+        "PORT": os.environ.get("DATABASE_PORT"),
     }
 }
 
@@ -119,6 +134,10 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# For combining all statics into one http request.
+# STATIC_ROOT = BASE_DIR / "staticfiles"
+# STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
 
 # For user uploaded files.
 MEDIA_URL = "/media/"
